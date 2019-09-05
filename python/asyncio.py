@@ -23,12 +23,13 @@ class EchoHandler(asyncore.dispatcher_with_send):
 	def handle_read(self):
 		print ('{}:handle_read'.format(self.addr))
 		data = self.recv(8192)
-		if data:
-			self.data_to_write.insert(0, "result-" + data)
+		if (data):
+			print (data)
+		else:
+			print ("no data??")
 	def handle_write(self):
 		print ('handle_write')
-		data = self.data_to_write.pop()
-		sent = self.send(data[:1024])
+		sent = self.send("$MTD,RUN,300<")
 	def handle_close(self):
 		print ('handle_close')
 		self.close()
@@ -46,9 +47,6 @@ class EchoServer(asyncore.dispatcher):
 		self.handlers = []
 
 	def handle_accept(self):
-	'''
-	called when a client requests to connect
-	'''
 		pair = self.accept()
 		if pair is not None:
 			sock, addr = pair
@@ -62,7 +60,7 @@ class EchoServer(asyncore.dispatcher):
 	def get_handlers(self):
 		return self.handlers
 
-server = EchoServer('localhost', 11111)
+server = EchoServer('localhost', 10000)
 # run a timer to send msg to client
 threading.Timer(3, checkClient, args=(server,)).start()
 asyncore.loop()

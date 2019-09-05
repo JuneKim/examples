@@ -28,6 +28,7 @@ class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 		print ("clientip:{}".format(client_address))
 		self.clients.append(client_address)
 		self.requests.append(request)
+		request.sendall("$MTD,RUN,1000<");
 		SocketServer.TCPServer.process_request(self, request, client_address)
 		print (self.clients)
 		print (self.requests)
@@ -41,7 +42,7 @@ class MTDController:
 	MTDController class: forks the thread to run a server which communicates with the trusted hosts.
 
 	"""
-	def __init__(self, ip = '127.0.0.1', port = '9999'):
+	def __init__(self, ip = '127.0.0.1', port = '10000'):
 		print ("ip:{},port{}".format(ip, port))
 		self.serverip = ip
 		self.serverport = port
@@ -63,11 +64,14 @@ class MTDController:
 if __name__ == "__main__":
 	
 	if len(sys.argv) is not 3:
-		HOST, PORT = 'localhost', 9999
+		HOST, PORT = 'localhost', 10000
 	else:
 		HOST, PORT = sys.argv[1], sys.argv[2]
 	
 	mtdController = MTDController(HOST, PORT)
 
 	mtdController.run()
-	print ('the end')
+	while True:
+		time.sleep(1)
+		print ('sleep')
+	mtdController.stop()
