@@ -3,10 +3,13 @@ import socket
 import time, threading
 
 def checkClient(server):
-	print ('checkClient')
-	for handler in server.get_handlers():
-		handler.add_data("abcd")
-		handler.handle_write()
+	inData = raw_input('add message:')
+	if inData:
+		print ("msg added" + inData)
+		for handler in server.get_handlers():
+			print ("handler existed");
+			handler.add_data(inData)
+			handler.handle_write()
 	
 	threading.Timer(3, checkClient, args=(server,)).start()
 	
@@ -28,8 +31,10 @@ class EchoHandler(asyncore.dispatcher_with_send):
 		else:
 			print ("no data??")
 	def handle_write(self):
-		print ('handle_write')
-		sent = self.send("$MTD,RUN,300<")
+		inData = self.data_to_write.pop()
+		if inData:
+			print ('there is the data')
+			sent = self.send(inData)
 	def handle_close(self):
 		print ('handle_close')
 		self.close()

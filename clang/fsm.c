@@ -9,6 +9,8 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 
+#define DBG
+
 #define __FUNC_ENTER__ printf("ENTER:%s\n", __func__);
 #define __FUNC_LEAVE__ printf("LEAVE:%s\n", __func__);
 
@@ -117,6 +119,7 @@ static int mtd_disconnect()
 	__FUNC_ENTER__
 	if (g_sockfd)
 		close(g_sockfd);
+	DBG("aaa%s\n", "aa");
 }
 
 void *myThreadFun(void *vargp)
